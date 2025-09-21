@@ -43,20 +43,20 @@ public class DataStructuresAndGitHubIntegration {
             System.out.println("\nSorted array (ascending):");
             printArray(arr);
 
-            // Find second lowest and second highest distinct values
-            Integer secondLowest = findSecondLowestDistinct(arr);
-            Integer secondHighest = findSecondHighestDistinct(arr);
+            // Find second lowest and second highest distinct values WITHOUT using built-in sorting
+            Integer secondLowest = secondLowestDistinctUnsorted(arr);
+            Integer secondHighest = secondHighestDistinctUnsorted(arr);
 
             if (secondLowest != null) {
                 System.out.println("Second lowest (distinct) number: " + secondLowest);
             } else {
-                System.out.println("Second lowest (distinct) not found (all elements may be equal).");
+                System.out.println("Second lowest (distinct) not found (less than 2 distinct values).");
             }
 
             if (secondHighest != null) {
                 System.out.println("Second highest (distinct) number: " + secondHighest);
             } else {
-                System.out.println("Second highest (distinct) not found (all elements may be equal).");
+                System.out.println("Second highest (distinct) not found (less than 2 distinct values).");
             }
         }
     }
@@ -77,17 +77,21 @@ public class DataStructuresAndGitHubIntegration {
         }
     }
 
-    // Bubble Sort
+    // Bubble Sort (with early exit optimization)
     private static void bubbleSort(int[] a) {
         int n = a.length;
+        boolean swapped;
         for (int i = 0; i < n - 1; i++) {
+            swapped = false;
             for (int j = 0; j < n - i - 1; j++) {
                 if (a[j] > a[j + 1]) {
                     int temp = a[j];
                     a[j] = a[j + 1];
                     a[j + 1] = temp;
+                    swapped = true;
                 }
             }
+            if (!swapped) break; // already sorted
         }
     }
 
@@ -111,23 +115,59 @@ public class DataStructuresAndGitHubIntegration {
         System.out.println();
     }
 
-    // Find second lowest distinct
-    private static Integer findSecondLowestDistinct(int[] a) {
-        if (a.length < 2) return null;
-        int lowest = a[0];
-        for (int i = 1; i < a.length; i++) {
-            if (a[i] > lowest) return a[i];
+    /**
+     * Find second lowest distinct value in an unsorted array without built-in sort.
+     * Returns null if there are fewer than two distinct values.
+     */
+    private static Integer secondLowestDistinctUnsorted(int[] a) {
+        if (a == null || a.length < 2) return null;
+
+        Integer smallest = null;
+        Integer secondSmallest = null;
+
+        for (int value : a) {
+            if (smallest == null || value < smallest) {
+                // new smallest found: shift smallest -> secondSmallest (only if distinct)
+                if (smallest == null || value != smallest) {
+                    secondSmallest = smallest;
+                }
+                smallest = value;
+            } else if (value != smallest) {
+                // value > smallest and distinct
+                if (secondSmallest == null || value < secondSmallest) {
+                    secondSmallest = value;
+                }
+            }
+            // duplicate values ignored
         }
-        return null;
+        return secondSmallest;
     }
 
-    // Find second highest distinct
-    private static Integer findSecondHighestDistinct(int[] a) {
-        if (a.length < 2) return null;
-        int highest = a[a.length - 1];
-        for (int i = a.length - 2; i >= 0; i--) {
-            if (a[i] < highest) return a[i];
+    /**
+     * Find second highest distinct value in an unsorted array without built-in sort.
+     * Returns null if there are fewer than two distinct values.
+     */
+    private static Integer secondHighestDistinctUnsorted(int[] a) {
+        if (a == null || a.length < 2) return null;
+
+        Integer largest = null;
+        Integer secondLargest = null;
+
+        for (int value : a) {
+            if (largest == null || value > largest) {
+                // shift largest -> secondLargest (only if distinct)
+                if (largest == null || value != largest) {
+                    secondLargest = largest;
+                }
+                largest = value;
+            } else if (value != largest) {
+                // value < largest and distinct
+                if (secondLargest == null || value > secondLargest) {
+                    secondLargest = value;
+                }
+            }
+            // duplicate values ignored
         }
-        return null;
+        return secondLargest;
     }
-}   
+}
