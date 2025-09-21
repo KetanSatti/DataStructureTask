@@ -23,7 +23,7 @@ public class DataStructuresAndGitHubIntegration {
             }
 
             // Ask user for sorting algorithm choice
-            System.out.println("\nChoose sorting algorithm (for display) :");
+            System.out.println("\nChoose sorting algorithm:");
             System.out.println("1 - Selection Sort");
             System.out.println("2 - Bubble Sort");
             System.out.println("3 - Insertion Sort");
@@ -77,7 +77,7 @@ public class DataStructuresAndGitHubIntegration {
         }
     }
 
-    // Bubble Sort
+    // Bubble Sort (with early exit optimization)
     private static void bubbleSort(int[] a) {
         int n = a.length;
         boolean swapped;
@@ -122,24 +122,23 @@ public class DataStructuresAndGitHubIntegration {
     private static Integer secondLowestDistinctUnsorted(int[] a) {
         if (a == null || a.length < 2) return null;
 
-        // We'll find smallest and second smallest distinct values in one pass.
         Integer smallest = null;
         Integer secondSmallest = null;
 
         for (int value : a) {
             if (smallest == null || value < smallest) {
-                // new smallest found: shift smallest -> secondSmallest
+                // new smallest found: shift smallest -> secondSmallest (only if distinct)
                 if (smallest == null || value != smallest) {
                     secondSmallest = smallest;
                 }
                 smallest = value;
             } else if (value != smallest) {
-                // value > smallest
+                // value > smallest and distinct
                 if (secondSmallest == null || value < secondSmallest) {
                     secondSmallest = value;
                 }
             }
-            // if value equals smallest or secondSmallest, ignore duplicates
+            // duplicate values ignored
         }
         return secondSmallest;
     }
@@ -156,17 +155,18 @@ public class DataStructuresAndGitHubIntegration {
 
         for (int value : a) {
             if (largest == null || value > largest) {
-                // shift largest -> secondLargest
+                // shift largest -> secondLargest (only if distinct)
                 if (largest == null || value != largest) {
                     secondLargest = largest;
                 }
                 largest = value;
             } else if (value != largest) {
-                // value < largest
+                // value < largest and distinct
                 if (secondLargest == null || value > secondLargest) {
                     secondLargest = value;
                 }
             }
+            // duplicate values ignored
         }
         return secondLargest;
     }
