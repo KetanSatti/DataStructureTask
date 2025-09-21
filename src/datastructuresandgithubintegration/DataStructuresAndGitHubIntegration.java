@@ -22,8 +22,23 @@ public class DataStructuresAndGitHubIntegration {
                 }
             }
 
-            // Sort using selection sort (ascending)
-            selectionSort(arr);
+            // Ask user for sorting algorithm choice
+            System.out.println("\nChoose sorting algorithm:");
+            System.out.println("1 - Selection Sort");
+            System.out.println("2 - Bubble Sort");
+            System.out.println("3 - Insertion Sort");
+            System.out.print("Enter choice (1/2/3): ");
+
+            int choice = sc.nextInt();
+            switch (choice) {
+                case 1 -> selectionSort(arr);
+                case 2 -> bubbleSort(arr);
+                case 3 -> insertionSort(arr);
+                default -> {
+                    System.out.println("Invalid choice, using Selection Sort by default.");
+                    selectionSort(arr);
+                }
+            }
 
             System.out.println("\nSorted array (ascending):");
             printArray(arr);
@@ -46,6 +61,7 @@ public class DataStructuresAndGitHubIntegration {
         }
     }
 
+    // Selection Sort
     private static void selectionSort(int[] a) {
         int n = a.length;
         for (int i = 0; i < n - 1; i++) {
@@ -61,11 +77,41 @@ public class DataStructuresAndGitHubIntegration {
         }
     }
 
+    // Bubble Sort
+    private static void bubbleSort(int[] a) {
+        int n = a.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (a[j] > a[j + 1]) {
+                    int temp = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    // Insertion Sort
+    private static void insertionSort(int[] a) {
+        int n = a.length;
+        for (int i = 1; i < n; i++) {
+            int key = a[i];
+            int j = i - 1;
+            while (j >= 0 && a[j] > key) {
+                a[j + 1] = a[j];
+                j--;
+            }
+            a[j + 1] = key;
+        }
+    }
+
+    // Utility: Print array
     private static void printArray(int[] a) {
         for (int x : a) System.out.print(x + " ");
         System.out.println();
     }
 
+    // Find second lowest distinct
     private static Integer findSecondLowestDistinct(int[] a) {
         if (a.length < 2) return null;
         int lowest = a[0];
@@ -75,6 +121,7 @@ public class DataStructuresAndGitHubIntegration {
         return null;
     }
 
+    // Find second highest distinct
     private static Integer findSecondHighestDistinct(int[] a) {
         if (a.length < 2) return null;
         int highest = a[a.length - 1];
